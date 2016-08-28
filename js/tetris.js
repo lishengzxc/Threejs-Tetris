@@ -14,13 +14,11 @@ window.Tetris = window.Tetris || {};
 Tetris.sounds = {};
 
 Tetris.init = function () {
-    Tetris.sounds["theme"] = document.getElementById("audio_theme");  
     Tetris.sounds["collision"] = document.getElementById("audio_collision");  
     Tetris.sounds["move"] = document.getElementById("audio_move");  
     Tetris.sounds["gameover"] = document.getElementById("audio_gameover");  
     Tetris.sounds["score"] = document.getElementById("audio_score");  
 
-    Tetris.sounds["theme"].play();
     // set the scene size
     var WIDTH = window.innerWidth,
         HEIGHT = window.innerHeight;
@@ -72,12 +70,6 @@ Tetris.init = function () {
 
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
 
-    Tetris.stats = new Stats();
-    Tetris.stats.domElement.style.position = 'absolute';
-    Tetris.stats.domElement.style.top = '10px';
-    Tetris.stats.domElement.style.left = '10px';
-    document.body.appendChild(Tetris.stats.domElement);
-
     document.getElementById("play_button").addEventListener('click', function (event) {
         event.preventDefault();
         Tetris.start();
@@ -88,8 +80,6 @@ Tetris.start = function () {
     document.getElementById("menu").style.display = "none";
     Tetris.pointsDOM = document.getElementById("points");
     Tetris.pointsDOM.style.display = "block";
-	
-    Tetris.sounds["theme"].pause();
 	
     Tetris.Block.generate();
     Tetris.animate();
@@ -116,9 +106,11 @@ Tetris.animate = function () {
 
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
 
-    Tetris.stats.update();
-
-    if (!Tetris.gameOver) window.requestAnimationFrame(Tetris.animate);
+    if (!Tetris.gameOver) {
+        window.requestAnimationFrame(Tetris.animate);   
+    } else {
+        window.confirm('again?') ? window.location.reload() : null;
+    }
 };
 
 
@@ -130,6 +122,7 @@ Tetris.zColors = [
     0x6666ff, 0x66ffff, 0xcc68EE, 0x666633, 0x66ff66, 0x9966ff, 0x00ff66, 0x66EE33, 0x003399, 0x330099, 0xFFA500, 0x99ff00, 0xee1289, 0x71C671, 0x00BFFF, 0x666633, 0x669966, 0x9966ff
 ];
 Tetris.addStaticBlock = function (x, y, z) {
+
     if (Tetris.staticBlocks[x] === undefined) Tetris.staticBlocks[x] = [];
     if (Tetris.staticBlocks[x][y] === undefined) Tetris.staticBlocks[x][y] = [];
 
